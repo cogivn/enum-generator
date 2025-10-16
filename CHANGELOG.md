@@ -1,3 +1,22 @@
+## 1.2.0
+🚀 New Features
+* Enhanced null safety support with proper null handling in enum generation
+* Improved code generation with better null safety annotations
+
+🔄 Changed
+* Updated build package to ^4.0.2 for better performance and stability
+* Updated build_config to ^1.2.0
+* Updated source_gen to support ^2.0.0 to ^5.0.0
+* Updated analyzer to support ^5.13.0 to ^9.0.0
+* Updated flutter_lints to ^6.0.0
+* Updated SDK constraint to ^3.8.0 for better compatibility
+* Removed unnecessary library declaration for cleaner code
+
+🐛 Fixed
+* Fixed null safety warnings in enum generation
+* Fixed unnecessary_library_name lint warning
+* Improved example code with proper I/O methods instead of print statements
+
 ## 1.1.4
 🔄 Changed
 * Loosened analyzer version to support both ^5.13.0 and ^8.0.0

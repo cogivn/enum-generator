@@ -17,7 +17,7 @@ class EnumExtensionGenerator {
 
   void _generateChecker(FieldElement e) {
     var name = e.name;
-    name = name.replaceRange(0, 1, name[0].toUpperCase());
+    name = name?.replaceRange(0, 1, name[0].toUpperCase());
     final field = 'bool get is$name => this == ${element.name}.${e.name};';
     _generated.writeln(field);
   }
@@ -122,11 +122,11 @@ class MethodGenerator {
     _generated.writeln('$condition $returnValue');
   }
 
-  String _getCallBackArg(String callBackName) {
+  String _getCallBackArg(String? callBackName) {
     return _shouldAddArgs() ? '${element.name} $callBackName' : '';
   }
 
-  String _getReturnStatement(String callbackName) {
+  String _getReturnStatement(String? callbackName) {
     return 'return $callbackName(${_shouldAddArgs() ? 'this' : ''});';
   }
 

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:enum_annotation/enum_annotation.dart';
 
 part 'main.g.dart';
@@ -23,19 +24,21 @@ void main() {
     square: () => 'I am a Square',
     circle: () => 'I am a Circle',
     triangle: () => 'I am a Triangle',
-    hexagon: () => 'I am a hexagon'
+    hexagon: () => 'I am a hexagon',
   );
-  print(message); // I am a Circle
+
+  // Using stdout for better control
+  stdout.writeln(message); // I am a Circle
 
   // all cases may not be handled but `orElse` cannot be null
   final canBeRotated = shape.maybeWhen(
     hexagon: () => true,
     orElse: () => false,
   );
-  print('Can be rotate: $canBeRotated'); // false
+  stdout.writeln('Can be rotate: $canBeRotated'); // false
 
   // equivalent to print(shape == Shape.circle)
-  print('The shape is circle: ${shape.isCircle}'); // true
-  print('The shape is Square: ${shape.isSquare}'); // false
-  print('The shape is Triangle: ${shape.isTriangle}'); // false
+  stdout.writeln('The shape is circle: ${shape.isCircle}'); // true
+  stdout.writeln('The shape is Square: ${shape.isSquare}'); // false
+  stdout.writeln('The shape is Triangle: ${shape.isTriangle}'); // false
 }
