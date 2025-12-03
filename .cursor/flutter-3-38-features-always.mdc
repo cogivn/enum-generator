@@ -1,0 +1,317 @@
+---
+alwaysApply: true
+---
+# Flutter 3.38 & Dart 3.10 Features
+
+## Critical Rules
+
+- **MANDATORY**: Use dot shorthand syntax (`.value`) for enum values and named constructors when the type can be inferred
+- **PREFER**: Dot shorthand over full enum/constructor names for cleaner, more readable code
+- **REQUIRED**: Use dot shorthand in widget constructors (e.g., `CrossAxisAlignment.center` → `.center`)
+- **REQUIRED**: Use dot shorthand in function parameters with default enum values (e.g., `{LogLevel level = .info}`)
+- **REQUIRED**: Use dot shorthand when calling functions with enum arguments (e.g., `logMessage('text', level: .error)`)
+- **ENFORCE**: Dot shorthand for common Flutter enums: `MainAxisAlignment`, `CrossAxisAlignment`, `TextAlign`, `Alignment`, `BoxFit`, etc.
+- **ENFORCE**: Dot shorthand for `EdgeInsets` constructors: `EdgeInsets.all()` → `.all()`, `EdgeInsets.only()` → `.only()`, `EdgeInsets.symmetric()` → `.symmetric()`
+- **MAINTAIN**: Full enum names when type inference is ambiguous or for clarity in complex contexts
+- **CHECK**: Verify dot shorthand usage in all new code and refactor existing code when appropriate
+
+## Dot Shorthand Syntax Examples
+
+### Widget Alignment
+
+<example>
+  // ✅ CORRECT: Use dot shorthand when type can be inferred
+  Column(
+    mainAxisAlignment: .center,
+    crossAxisAlignment: .start,
+    children: [
+      Text('Hello'),
+    ],
+  )
+
+  Row(
+    mainAxisAlignment: .spaceBetween,
+    crossAxisAlignment: .center,
+    children: [
+      Text('Left'),
+      Text('Right'),
+    ],
+  )
+</example>
+
+<example type="invalid">
+  // ❌ INCORRECT: Unnecessarily verbose enum names
+  Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Hello'),
+    ],
+  )
+</example>
+
+### Text Alignment
+
+<example>
+  // ✅ CORRECT: Use dot shorthand for text alignment
+  Text(
+    'Hello World',
+    textAlign: .center,
+  )
+
+  TextField(
+    textAlign: .left,
+    decoration: InputDecoration(),
+  )
+</example>
+
+<example type="invalid">
+  // ❌ INCORRECT: Full enum name when shorthand is clearer
+  Text(
+    'Hello World',
+    textAlign: TextAlign.center,
+  )
+</example>
+
+### Box Constraints and Fitting
+
+<example>
+  // ✅ CORRECT: Use dot shorthand for BoxFit and Alignment
+  Image.network(
+    'https://example.com/image.jpg',
+    fit: .cover,
+    alignment: .center,
+  )
+
+  Container(
+    alignment: .topLeft,
+    child: Text('Content'),
+  )
+</example>
+
+<example type="invalid">
+  // ❌ INCORRECT: Verbose enum names
+  Image.network(
+    'https://example.com/image.jpg',
+    fit: BoxFit.cover,
+    alignment: Alignment.center,
+  )
+</example>
+
+### Padding and Margin (EdgeInsets)
+
+<example>
+  // ✅ CORRECT: Use dot shorthand for EdgeInsets constructors
+  Container(
+    padding: .all(16.ss),
+    margin: .symmetric(horizontal: 24.ss, vertical: 12.ss),
+    child: Text('Content'),
+  )
+
+  Padding(
+    padding: .only(left: 16.ss, right: 16.ss, bottom: 3.ss),
+    child: Text('Text'),
+  )
+
+  SizedBox(
+    width: 100.ss,
+    height: 50.ss,
+    child: Container(
+      padding: .symmetric(horizontal: 20.ss),
+      margin: .only(top: 10.ss),
+    ),
+  )
+</example>
+
+<example type="invalid">
+  // ❌ INCORRECT: Verbose EdgeInsets constructors
+  Container(
+    padding: EdgeInsets.all(16.ss),
+    margin: EdgeInsets.symmetric(horizontal: 24.ss, vertical: 12.ss),
+    child: Text('Content'),
+  )
+
+  Padding(
+    padding: EdgeInsets.only(left: 16.ss, right: 16.ss, bottom: 3.ss),
+    child: Text('Text'),
+  )
+</example>
+
+### Scroll Physics and Behavior
+
+**Note**: ScrollPhysics classes (like `NeverScrollableScrollPhysics`, `BouncingScrollPhysics`) are **NOT enums** and do **NOT support dot shorthand**. They are classes that must be instantiated.
+
+<example>
+  // ✅ CORRECT: ScrollPhysics classes must be instantiated
+  ListView(
+    physics: const NeverScrollableScrollPhysics(),
+    children: [
+      Text('Item 1'),
+    ],
+  )
+
+  SingleChildScrollView(
+    physics: const BouncingScrollPhysics(),
+    child: Column(),
+  )
+</example>
+
+<example type="invalid">
+  // ❌ INCORRECT: Dot shorthand doesn't work for classes
+  ListView(
+    physics: .neverScrollableScrollPhysics, // ERROR: Not an enum!
+    children: [
+      Text('Item 1'),
+    ],
+  )
+</example>
+
+### Function Parameters and Method Calls
+
+<example>
+  // ✅ CORRECT: Use dot shorthand in function parameters with default enum values
+  enum LogLevel { info, warning, error, debug }
+
+  void logMessage(String message, {LogLevel level = .info}) {
+    // ... implementation
+  }
+
+  // ✅ CORRECT: Use dot shorthand when calling functions with enum arguments
+  logMessage('Failed to connect to database', level: .error);
+  logMessage('User logged in', level: .info);
+
+  // ✅ CORRECT: Use dot shorthand in method calls
+  void processData({ProcessingMode mode = .async}) {
+    // ... implementation
+  }
+
+  processData(mode: .sync);
+</example>
+
+<example type="invalid">
+  // ❌ INCORRECT: Full enum names when shorthand is available
+  void logMessage(String message, {LogLevel level = LogLevel.info}) {
+    // ... implementation
+  }
+
+  logMessage('Failed to connect', level: LogLevel.error);
+</example>
+
+### When to Use Full Enum Names
+
+<example>
+  // ✅ CORRECT: Use full enum name when type inference is ambiguous
+  final alignment = Alignment.center; // Variable assignment needs type
+  final textAlign = TextAlign.center; // Variable assignment needs type
+
+  // ✅ CORRECT: Use full enum name for clarity in complex contexts
+  Widget build(BuildContext context) {
+    const MainAxisAlignment mainAxis = MainAxisAlignment.spaceEvenly;
+    return Row(mainAxisAlignment: mainAxis);
+  }
+
+  // ✅ CORRECT: Use full enum name when type cannot be inferred
+  final List<LogLevel> levels = [LogLevel.info, LogLevel.error];
+</example>
+
+## Common Flutter Enums That Support Dot Shorthand
+
+### Alignment & Positioning
+- `MainAxisAlignment`: `.start`, `.end`, `.center`, `.spaceBetween`, `.spaceAround`, `.spaceEvenly`
+- `CrossAxisAlignment`: `.start`, `.end`, `.center`, `.stretch`, `.baseline`
+- `Alignment`: `.topLeft`, `.topCenter`, `.topRight`, `.centerLeft`, `.center`, `.centerRight`, `.bottomLeft`, `.bottomCenter`, `.bottomRight`
+- `TextAlign`: `.left`, `.right`, `.center`, `.justify`, `.start`, `.end`
+
+### Image & Box Fitting
+- `BoxFit`: `.fill`, `.contain`, `.cover`, `.fitWidth`, `.fitHeight`, `.none`, `.scaleDown`
+- `ImageRepeat`: `.repeat`, `.repeatX`, `.repeatY`, `.noRepeat`
+
+### Scroll Physics
+**Note**: ScrollPhysics classes do NOT support dot shorthand as they are classes, not enums. Use `const NeverScrollableScrollPhysics()`, `const BouncingScrollPhysics()`, etc.
+
+### Text Input Actions
+- `TextInputAction`: `.none`, `.done`, `.go`, `.search`, `.send`, `.next`, `.previous`, `.continueAction`, `.newline`
+
+### Padding and Margin
+- `EdgeInsets.all(value)` → `.all(value)`
+- `EdgeInsets.only({left, top, right, bottom})` → `.only({left, top, right, bottom})`
+- `EdgeInsets.symmetric({vertical, horizontal})` → `.symmetric({vertical, horizontal})`
+- `EdgeInsets.fromLTRB(left, top, right, bottom)` → `.fromLTRB(left, top, right, bottom)`
+- `EdgeInsets.fromSTEB(start, top, end, bottom)` → `.fromSTEB(start, top, end, bottom)`
+
+### Other Common Enums
+- `Axis`: `.horizontal`, `.vertical`
+- `VerticalDirection`: `.up`, `.down`
+- `TextDirection`: `.ltr`, `.rtl`
+- `TextBaseline`: `.alphabetic`, `.ideographic`
+- `StackFit`: `.loose`, `.expand`, `.passthrough`
+- `HitTestBehavior`: `.deferToChild`, `.opaque`, `.translucent`
+
+## Migration Guidelines
+
+### Refactoring Existing Code
+
+<example>
+  // Before (Flutter 3.37 and earlier)
+  Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Text(
+        'Hello',
+        textAlign: TextAlign.center,
+      ),
+    ],
+  )
+
+  // After (Flutter 3.38 with dot shorthand)
+  Column(
+    mainAxisAlignment: .center,
+    crossAxisAlignment: .stretch,
+    children: [
+      Padding(
+        padding: .all(16.ss),
+        child: Text(
+          'Hello',
+          textAlign: .center,
+        ),
+      ),
+    ],
+  )
+</example>
+
+## Best Practices
+
+1. **Use dot shorthand consistently** across the codebase for better readability
+2. **Prefer dot shorthand** in widget constructors where type inference is clear
+3. **Use dot shorthand** in function parameters with default enum values
+4. **Use dot shorthand** when calling functions with enum arguments
+5. **Keep full enum names** when assigning to variables or when type clarity is needed
+6. **Refactor gradually** - update code as you touch it rather than mass refactoring
+7. **Document exceptions** - if full enum names are used for clarity, add a comment explaining why
+
+## Platform-Specific Enhancements (Flutter 3.38)
+
+### Android
+- **Predictive Back Gesture**: Ensure proper navigation handling for Android's predictive back gesture
+- **NDK r28**: Project already updated to NDK r28 in build.gradle.kts
+- **Java 17**: Ensure Java 17 compatibility for Android builds
+
+### iOS
+- **iOS 26 Support**: Project supports iOS 26 and Xcode 26
+- **UIScene Lifecycle**: Proper handling of UIScene lifecycle for iOS apps
+
+### Widget Previewer
+- **Use Widget Previewer**: Leverage improved Widget Previewer in VS Code and Android Studio for faster UI development
+- **Preview Widgets**: Test widget layouts directly in IDE before running on device/emulator
+
+## Code Review Checklist
+
+- [ ] Dot shorthand used for enum values in widget constructors
+- [ ] Dot shorthand used for `EdgeInsets` constructors (padding/margin)
+- [ ] Dot shorthand used in function parameters with default enum values
+- [ ] Dot shorthand used when calling functions with enum arguments
+- [ ] Full enum names only when necessary for type clarity
+- [ ] Consistent usage across similar widgets and functions
+- [ ] No unnecessary verbosity in enum usage
+- [ ] Code follows Flutter 3.38 best practices

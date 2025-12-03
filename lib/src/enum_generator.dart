@@ -5,7 +5,7 @@ class EnumExtensionGenerator {
   final _generated = StringBuffer();
 
   EnumExtensionGenerator(this.element)
-      : assert(element.kind == ElementKind.ENUM);
+    : assert(element.kind == ElementKind.ENUM);
 
   String generate() {
     _generateExtensionHeader();
@@ -18,7 +18,8 @@ class EnumExtensionGenerator {
   void _generateChecker(FieldElement e) {
     var name = e.name;
     name = name?.replaceRange(0, 1, name[0].toUpperCase());
-    final field = 'bool get is$name => this == ${element.name}.${e.name};';
+    // Use dot shorthand syntax since we're in an extension method (type is inferred)
+    final field = 'bool get is$name => this == .${e.name};';
     _generated.writeln(field);
   }
 
@@ -49,7 +50,7 @@ class MethodGenerator {
   late MethodType _methodType;
 
   MethodGenerator({required this.element})
-      : values = element.fields.where((e) => e.isEnumConstant).toList();
+    : values = element.fields.where((e) => e.isEnumConstant).toList();
 
   String generate(MethodType type) {
     _initialize(type);
@@ -65,8 +66,8 @@ class MethodGenerator {
       _generated.writeln('{');
       for (int i = 0; i < values.length; i++) {
         final name = values[i].name;
-        final enumType = '${element.name}.$name';
-        final ifCondition = 'if(this == $enumType && $name != null)';
+        // Use dot shorthand syntax since we're in an extension method (type is inferred)
+        final ifCondition = 'if(this == .$name && $name != null)';
         final condition = i == 0 ? ifCondition : 'else $ifCondition';
         _generated.writeln(condition);
         _generated.writeln('{ ${_getReturnStatement(name)} }');
@@ -117,7 +118,8 @@ class MethodGenerator {
 
   void _addSwitchCase(FieldElement field) {
     final name = field.name;
-    final condition = 'case ${element.name}.$name: ';
+    // Use dot shorthand syntax in switch statement (type is inferred from switch expression)
+    final condition = 'case .$name: ';
     final returnValue = _getReturnStatement(name);
     _generated.writeln('$condition $returnValue');
   }

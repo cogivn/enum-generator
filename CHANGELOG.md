@@ -1,6 +1,13 @@
-## 1.2.1+1
+## 1.2.2
+🚀 New Features
+* Added dot shorthand syntax support in generated code (e.g., `.value` instead of `EnumName.value`)
+  * Generated code now uses modern Dart 3.10+ syntax for cleaner, more readable code
+  * Requires Dart SDK >=3.10.0
+
 🔄 Changed
-* Rolled back build dependency constraint to `^4.0.0` to avoid conflicts
+* Updated analyzer constraint to support analyzer 9.x (`>=7.0.0`)
+* Updated build dependency constraint to `>=4.0.0`
+* Updated SDK constraint to `>=3.10.0 <4.0.0` to support dot shorthand syntax
 
 ## 1.2.1
 🔄 Changed
