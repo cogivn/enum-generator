@@ -1,3 +1,18 @@
+## 1.2.1+1
+🔄 Changed
+* Rolled back build dependency constraint to `^4.0.0` to avoid conflicts
+
+## 1.2.1
+🔄 Changed
+* Updated build dependency constraint to `^4.0.0` for compatibility with build_runner >=2.9.0
+
+📝 Documentation
+* Added platform compatibility section to README explaining build-time vs runtime compatibility
+* Added comments in pubspec.yaml clarifying build-time code generator requirements
+
+🐛 Fixed
+* Fixed code formatting issues to match Dart formatter standards
+
 ## 1.2.0
 🚀 New Features
 * Enhanced null safety support with proper null handling in enum generation

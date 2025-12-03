@@ -10,5 +10,6 @@ dependencies:
 dev_dependencies:
   build_runner: ^2.9.0
   test: ^1.26.3
+  build: '4.0.0'
   enum_generator:
     path: ../
